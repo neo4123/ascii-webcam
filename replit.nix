@@ -1,5 +1,6 @@
 { pkgs }: {
   deps = [
+    pkgs.python39Packages.conda
     pkgs.python38Full
   ];
   env = {

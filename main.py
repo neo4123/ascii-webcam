@@ -23,6 +23,8 @@ def generate_ascii_letters():
 	for letter in letters:
 		img = np.zeros((12, 16), np.uint8)
 		img = cv2.putText(img, letter, (0, 11), cv2.FRONT_HERSHEY_SIMPLEX, 0.5, 225)
+		image.append(img)
+	return np.stack(image)
 
 
 
@@ -30,10 +32,15 @@ cap = cv2.VideoCapture(0)
 
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+images = generate_ascii_letters
 while True:
 	_, frame = cap.read()
 	frame = cv2.flip(frame, 1)
-	cv2.imshow("webcam", "frame")
+	gb = cv2.GaussianBlur(frame, (5, 5), 0)
+	can = cv2.Canny(gb, 127, 31)
+	ascii_art = to_ascii_art(can, images)
+	cv2.imshow('ASCII ART', ascii_art)
+	cv2.imshow("webcam", frame)
 	if cv2.waitkey(1) == ord('q'):
 		break
 
